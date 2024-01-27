@@ -65,7 +65,6 @@ describe("US-06 - Reservation status", () => {
           .post("/reservations")
           .set("Accept", "application/json")
           .send({ data });
-          console.log("FROM TEST",response.body, status);
         expect(response.body.error).toContain(status);
         expect(response.status).toBe(400);
       }

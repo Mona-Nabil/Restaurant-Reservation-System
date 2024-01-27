@@ -46,7 +46,7 @@ function hasProperties(...properties) {
           throw error;
         }
       });
-      next();
+      return next();
     } catch (error) {
       next(error);
     }
@@ -57,42 +57,56 @@ function hasProperties(...properties) {
 function tableNameHasValidLength(req, res, next) {
   const { table_name } = req.body.data;
   if (table_name.length < 2) {
-    return next({ status: 400, message: "table_name must be at least 2 characters" });
+    return next({
+      status: 400,
+      message: "table_name must be at least 2 characters",
+    });
   }
   next();
 }
 
 // Middleware: Check if 'capacity' is a valid number
 function hasValidCapacity(req, res, next) {
-    const { capacity } = req.body.data;
-    if (typeof capacity !== "number" || capacity < 1) {
-      return next({ status: 400, message: "table capacity must be at least 1 person" });
-    }
-    next();
+  const { capacity } = req.body.data;
+  if (typeof capacity !== "number" || capacity < 1) {
+    return next({
+      status: 400,
+      message: "table capacity must be at least 1 person",
+    });
   }
-  
+  next();
+}
 
 // Handler: Create a new table
 async function create(req, res, next) {
-  const data = await service.create(req.body.data);
-  console.log("data:", data);
-  res.status(201).json({ data: data });
+  try {
+    const data = await service.create(req.body.data);
+    console.log("Created data:", data);
+
+    if (!data) {
+      throw new Error("Data not returned from create service");
+    }
+
+    res.status(201).json({ data: data });
+  } catch (error) {
+    console.error("Error in create handler:", error);
+    next(error);
+  }
 }
 
 // Middleware: Check if reservation exists
 async function reservationExists(req, res, next) {
-    const { reservation_id } = req.body.data;
-    const reservation = await service.readReservation(reservation_id);
-    if (reservation) {
-      res.locals.reservation = reservation;
-      return next();
-    }
-    next({
-      status: 404,
-      message: `reservation ${reservation_id} does not exist`,
-    });
+  const { reservation_id } = req.body.data;
+  const reservation = await service.readReservation(reservation_id);
+  if (reservation) {
+    res.locals.reservation = reservation;
+    return next();
   }
-  
+  next({
+    status: 404,
+    message: `reservation ${reservation_id} does not exist`,
+  });
+}
 
 // Middleware: Check if table exists
 async function tableExists(req, res, next) {
@@ -138,18 +152,17 @@ function tableIsNotOccupied(req, res, next) {
 
 // Middleware: Check if reservation is already seated or finished
 function reservationisAlreadySeated(req, res, next) {
-    const currentStatus = res.locals.reservation.status;
-  
-    if (currentStatus === "seated" || currentStatus === "finished") {
-      return next({
-        status: 400,
-        message: `Reservation is already ${currentStatus}`,
-      });
-    }
-  
-    next();
+  const reservation = res.locals.reservation;
+
+  if (reservation && reservation.status === "seated") {
+    return next({
+      status: 400,
+      message: `Table is already seated`,
+    });
   }
-  
+
+  next();
+}
 
 // Handler: Update table to seat reservation
 async function seatReservation(req, res) {
@@ -194,15 +207,15 @@ async function removeReservation(req, res) {
 
 // Export middleware and handlers
 module.exports = {
-    create: [
-        hasData,
-        hasOnlyValidProperties,
-        hasProperties("table_name", "capacity"),
-        tableNameHasValidLength,
-        hasValidCapacity,
-        reservationisAlreadySeated,
-        asyncErrorBoundary(create),
-      ],      
+  create: [
+    hasData,
+    hasOnlyValidProperties,
+    hasProperties("table_name", "capacity"),
+    tableNameHasValidLength,
+    hasValidCapacity,
+    reservationisAlreadySeated,
+    asyncErrorBoundary(create),
+  ],
   list: asyncErrorBoundary(list),
   seatReservation: [
     asyncErrorBoundary(tableExists),
