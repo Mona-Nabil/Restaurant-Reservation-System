@@ -1,29 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { listReservations, listTables } from "../utils/api";
-import ReservationsList from "../reservations/ReservationList"
+import ReservationsList from "../reservations/ReservationList";
 import TableList from "../tables/TableList";
 import DateNavButtons from "./DateNavButtons";
+import { previous, next, today } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
-import { Link } from "react-router-dom";
-// import "./Dashboard.css";
 
-/**
- * Defines the dashboard page.
- * @param date
- *  the date for which the user wants to view reservations.
- */
 function Dashboard({ date }) {
-  
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
 
-  // Load Dashboard - reservations and tables, remove loading message //
   useEffect(() => {
     loadReservationsAndTables();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
   function loadReservations() {
@@ -34,12 +26,7 @@ function Dashboard({ date }) {
       .catch(setReservationsError);
     return () => abortController.abort();
   }
-  function loadReservationsAndTables() {
-    const abortController = new AbortController();
-    loadReservations();
-    loadTables();
-    return () => abortController.abort();
-  }
+
   function loadTables() {
     const abortController = new AbortController();
     setTablesError(null);
@@ -49,20 +36,35 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
-
-
+  function loadReservationsAndTables() {
+    const abortController = new AbortController();
+    loadReservations();
+    loadTables();
+    return () => abortController.abort();
+  }
 
   return (
     <main className="dashboard">
-      <h1>Dashboard</h1>
-      <div className="d-md-flex flex-column">
-        {!reservations.length && <h2>No reservations on this date.</h2>}
+      <div className="headingBar d-md-flex my-3 p-2">
+        <h1>Dashboard</h1>
       </div>
-      <ErrorAlert error={reservationsError} setError={setReservationsError} />
 
-      {/* Reservations */}
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link to={`/dashboard?date=${previous(date)}`}>Previous Day</Link>
+          </li>
+          <li className="breadcrumb-item active" aria-current="page">
+            Today
+          </li>
+          <li className="breadcrumb-item">
+            <Link to={`/dashboard?date=${next(date)}`}>Next Day</Link>
+          </li>
+        </ol>
+      </nav>
+
       <div className="reservations-list">
-        <h4 className="mb-2">Reservations for {date}</h4>
+        <h4>Reservations for {date}</h4>
         <ReservationsList
           reservations={reservations}
           setReservationsError={setReservationsError}
@@ -70,16 +72,11 @@ function Dashboard({ date }) {
         />
       </div>
 
-      {/* Button Toolbar */}
-      <div className="date-nav">
-        <DateNavButtons currentDate={date} />
-      </div>
-
-      {/* Tables */}
       <div className="tables-list">
-        <div className="d-md-flex mb-3">
-          <h4 className="mb-0">Tables</h4>
+        <div className="headingBar my-3 p-2">
+          <h4>Tables</h4>
         </div>
+
         {!tables && <h5 className="load-message">Loading...</h5>}
         <ErrorAlert error={tablesError} setError={setTablesError} />
         <TableList
@@ -87,19 +84,6 @@ function Dashboard({ date }) {
           setTablesError={setTablesError}
           loadReservationsAndTables={loadReservationsAndTables}
         />
-
-        {/* Seat button for each table with a reservation */}
-       {tables
-    .filter((table) => table.reservation_id)
-    .map((table) => (
-      <div key={table.table_id}>
-        <Link to={`/reservations/${table.reservation_id}/seat`}>
-          <button className="btn" data-table-id={table.table_id}>
-            Seat
-          </button>
-        </Link>
-      </div>
-    ))}
       </div>
     </main>
   );

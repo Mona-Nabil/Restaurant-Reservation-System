@@ -4,27 +4,26 @@
   border-radius: 15px;
 }
 
-.reservation-card
-.card-header 
-.btn {
-  padding: 3px 15px 0px;
+.reservation-card .card-header .breadcrumb {
+  margin-bottom: 0;
+}
+
+.reservation-card .card-header .btn {
+  margin-top: -3px;
+  margin-left: 10px;
 }
 
 .reservation-card {
   margin-top: 10px;
 }
 
-.reservation-card
-.card-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+.reservation-card .card-body {
   padding: 0px 20px;
 }
 
-#resCardFooter {
+.reservation-card #resCardFooter {
   border: none;
-  display: inline-flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0px 10px;
@@ -32,8 +31,7 @@
   text-align: right;
 }
 
-/* Padding adjustments because of uncentered font */
-#statusBadge {
+.reservation-card #statusBadge {
   background-color: #34b3b5e3;
   border-radius: 20px;
   padding: 15px 20px 8.5px;

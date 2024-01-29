@@ -181,7 +181,9 @@ function hasDefaultBookedStatus(req, res, next) {
  * Create a new reservation
  */
 async function create(req, res) {
-  const data = await service.create(req.body.data);
+  const date = new Date(req.body.data.reservation_date)
+  const reservation = {...req.body.data, reservation_date: date}
+  const data = await service.create(reservation);
   res.status(201).json({ data: data });
 }
 

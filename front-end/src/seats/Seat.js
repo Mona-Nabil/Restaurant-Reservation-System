@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, Link } from "react-router-dom";
 import { listTables, readReservation, updateTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import "./Seat.css"
+import "./Seat.css";
 
-function Seat() {
-  // Extract reservation_id from the URL parameters
+function Seat({ reservationId, tableId }) {
   const { reservation_id } = useParams();
   const history = useHistory();
 
-  // State variables
   const [error, setError] = useState(null);
   const [tables, setTables] = useState([]);
   const [reservation, setReservation] = useState([]);
@@ -17,7 +15,6 @@ function Seat() {
     reservation_id: reservation_id,
   });
 
-  // Effect to load tables from the server
   useEffect(() => {
     async function loadTables() {
       const response = await listTables();
@@ -25,8 +22,7 @@ function Seat() {
     }
     loadTables();
   }, []);
-  
-  // Effect to load reservation details based on reservation_id
+
   useEffect(() => {
     async function loadReservation() {
       const response = await readReservation(reservation_id);
@@ -35,18 +31,16 @@ function Seat() {
     loadReservation();
   }, [reservation_id]);
 
-  // Handle changes in the table selection dropdown
   const handleChange = ({ target }) => {
     setSelectedTable({ ...selectedTable, [target.name]: target.value });
-  }
+  };
 
-  // Handle form submission, update table and navigate to the dashboard
   const handleSubmit = (event) => {
     event.preventDefault();
     updateTable(reservation_id, selectedTable.table_id, selectedTable)
       .then(() => history.push("/dashboard"))
       .catch((error) => setError(error));
-  }
+  };
 
   return (
     <main>
@@ -59,39 +53,41 @@ function Seat() {
       <form onSubmit={handleSubmit}>
         <label htmlFor="table-select" className="table-select">
           <h4>
-            Assign a table for reservation 
-            #{reservation_id}: {reservation.first_name} {reservation.last_name}, 
-            for {reservation.people} people:
+            Assign a table for reservation #{reservation_id}:{" "}
+            {reservation.first_name} {reservation.last_name}, for{" "}
+            {reservation.people} people:
           </h4>
         </label>
         <div className="selections">
-          <select 
-            name="table_id" 
+          <select
+            name="table_id"
             id="table-select"
-            onChange={handleChange}>
-          <option value="">- Please choose a table -</option>
-          {tables.map((table) => (
-            <option value={table.table_id} key={table.table_name}>
-              {table.table_name} - {table.capacity}
-            </option>
-          ))}
+            onChange={handleChange}
+            value={selectedTable.table_id || ""}
+          >
+            <option value="">- Please choose a table -</option>
+            {tables.map((table) => (
+              <option value={table.table_id} key={table.table_name}>
+                {table.table_name} - {table.capacity}
+              </option>
+            ))}
           </select>
         </div>
 
         <div className="form-buttons">
-          <button 
-            type="submit"
-            className="btn btn-primary btn-lg">
-              Submit
-          </button>
           <button
-            type="button"
-            className="btn btn-secondary btn-lg"
-            onClick={() => history.go(-1)}>
-              Cancel
+            type="submit"
+            className="btn btn-primary btn-lg"
+            disabled={!selectedTable.table_id}
+          >
+            Submit
           </button>
+          <Link to="/dashboard">
+            <button type="button" className="btn btn-secondary btn-lg">
+              Cancel
+            </button>
+          </Link>
         </div>
-
       </form>
     </main>
   );

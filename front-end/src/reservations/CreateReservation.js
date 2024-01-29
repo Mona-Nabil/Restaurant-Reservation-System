@@ -4,12 +4,8 @@ import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationForm from "./ReservationForm";
 
-
 function CreateReservation() {
-
-
-  // Initial Form state
-  const InitialFormState = {
+  const initialFormState = {
     first_name: "",
     last_name: "",
     mobile_number: "",
@@ -17,10 +13,12 @@ function CreateReservation() {
     reservation_time: "",
     people: "",
   };
-  const [reservation, setReservation] = useState({ ...InitialFormState });
-  const history = useHistory();
+
+  const [reservation, setReservation] = useState({ ...initialFormState });
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [error, setError] = useState(null);
-  // create handlers
+  const history = useHistory();
+
   const handleChange = ({ target }) => {
     setReservation({ ...reservation, [target.name]: target.value });
   };
@@ -28,20 +26,22 @@ function CreateReservation() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const abortController = new AbortController();
-
+  
     try {
-      // Create a new reservation
-      const newReservation = await createReservation(reservation, abortController.signal);
-
+      const newReservation = await createReservation(
+        reservation,
+        abortController.signal
+      );
+  console.log(newReservation, reservation);
       // Redirect to the dashboard for the reservation date
-      history.push(`/dashboard?date=${newReservation.reservation_date.slice(0, 10)}`);
+      history.push(`/dashboard?date=${reservation.reservation_date.slice(0, 10)}`);
     } catch (error) {
       setError(error);
     } finally {
-      // Clean up the abort controller
       abortController.abort();
     }
-  }
+  };
+  
 
   return (
     <main>
@@ -50,11 +50,14 @@ function CreateReservation() {
         <ErrorAlert error={error} setError={setError} />
       </div>
 
-      <ReservationForm
-        reservation={reservation}
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-      />
+      {/* Only render the form if it hasn't been submitted */}
+      {!formSubmitted && (
+        <ReservationForm
+          reservation={reservation}
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+        />
+      )}
     </main>
   );
 }

@@ -1,11 +1,8 @@
-// Import React library
 import React from "react";
-
-// Import CancelReservationButton component
+import { Link } from "react-router-dom";
 import CancelReservationButton from "./CancelReservationButton";
-import "./ReservationCard.css"
+import "./ReservationCard.css";
 
-// Functional component for Reservation Card
 function ReservationCard({
   reservation_id,
   first_name,
@@ -18,54 +15,48 @@ function ReservationCard({
   setReservationsError,
   loadReservationsAndTables,
 }) {
-  // Render reservation card with details and actions
+  // console.log(typeof reservation_date);
   return (
-    <div className="card h-100 w-100 mb-3">
-      {/* Reservation Header */}
-      <h4 className="card-header d-flex justify-content-between align-itmes-center">
-        {last_name}, {first_name}
+    <div className="card reservation-card h-100 w-100 mb-3">
+      <div className="card-header d-flex justify-content-between align-items-center">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              {last_name}, {first_name}
+            </li>
+          </ol>
+        </nav>
 
-        {/* Edit button (visible only for "booked" status) */}
         {status === "booked" && (
-          <a
-            type="button"
+          <Link
+            to={`/reservations/${reservation_id}/edit`}
             className="btn btn-outline-secondary"
-            href={`/reservations/${reservation_id}/edit`}
           >
             Edit
-          </a>
+          </Link>
         )}
-      </h4>
-
-      {/* Reservation Body */}
-      <div className="card-body">
-        <h5 className="card-title">
-          {reservation_time}, {reservation_date}
-        </h5>
-        <h6 className="card-subtitle mb-2 test-muted">Guests: {people}</h6>
-        <h6 className="card-subtitle mb-2 test-muted">
-          Mobile Number: {mobile_number}
-        </h6>
       </div>
 
-      {/* Reservation Footer */}
-      <div
-        className="card-footer border-secondary text-secondary"
-        id="resCardFooter"
-      >
-        {/* Seat button (visible only for "booked" status) */}
+      <div className="card-body">
+        <h5 className="card-title">{reservation_time}, {reservation_date}</h5>
+        <h6 className="card-subtitle mb-2 text-muted">Guests: {people}</h6>
+        <h6 className="card-subtitle mb-2 text-muted">Mobile Number: {mobile_number}</h6>
+      </div>
+
+      <div className="card-footer border-secondary text-secondary" id="resCardFooter">
         {status === "booked" && (
-          <a
+          <Link
+            to={`/reservations/${reservation_id}/seat`}
             className="btn btn-secondary"
-            id="seatButton"
-            href={`/reservations/${reservation_id}/seat`}
             role="button"
           >
             Seat
-          </a>
+          </Link>
         )}
 
-        {/* Reservation Status */}
         <h5>
           <span
             className="badge text-light"
@@ -76,7 +67,6 @@ function ReservationCard({
           </span>
         </h5>
 
-        {/* Cancel reservation button (visible only for "booked" status) */}
         {status === "booked" && (
           <CancelReservationButton
             reservation_id={reservation_id}
@@ -89,5 +79,4 @@ function ReservationCard({
   );
 }
 
-// Export the ReservationCard component as the default export
 export default ReservationCard;
