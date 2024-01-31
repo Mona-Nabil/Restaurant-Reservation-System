@@ -1,17 +1,29 @@
 # Capstone: Restaurant Reservation System
 
-is my final capstone project in [Thinkful's-CheggSkills] online Software Engineering program. It is a full-stack web application intended to assist restaurant management in booking, seating, editing, and searching for reservations. This final project was an opportunity for me to combine all the skills I've learned throughout my studies to create a fully functioning and aesthetically pleasing program using clean, effective, DRY code.
+Restaurant Reservation Systemis my final capstone project in [Thinkful's-CheggSkills](https://www.thinkful.com) online Software Engineering program. It is a full-stack web application intended to assist restaurant management in booking, seating, editing, and searching for reservations. This final project was an opportunity for me to combine all the skills I've learned throughout my studies to create a fully functioning and aesthetically pleasing program using clean, effective, DRY code.
+
+# Application "Periodic Tables" Deployed
+[Github repo /Frontend](https://restaurant-reservations-frontend-ctaz.onrender.com)
+
+[Github repo /Backend](https://restaurant-reservations-backend-yo8l.onrender.com)
 
 
 ## Languages & Frameworks used:
 
 • React & React Router
+
 • JavaScript
+
 • CSS
+
 • Bootstrap CSS
+
 • Node.js
+
 • Express.js
+
 • Knex.js
+
 • PostgreSQL with Elephant SQL
 
 # Features:
