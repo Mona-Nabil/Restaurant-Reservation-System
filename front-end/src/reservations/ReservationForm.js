@@ -42,13 +42,12 @@ function ReservationForm({ reservation, handleSubmit, handleChange }) {
           Mobile Number
         </label>
         <input
-          type="tel"
+          type="text"
           name="mobile_number"
           id="mobile_number"
           className="form-control"
           onChange={handleChange}
           value={`${reservation.mobile_number}`}
-          pattern="^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"
           required
         />
       </div>

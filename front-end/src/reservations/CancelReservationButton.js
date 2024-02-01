@@ -1,7 +1,6 @@
 // Import React library
 import React from "react";
 
-// Import cancelReservation function from utils/api
 import { cancelReservation } from "../utils/api";
 
 // Functional component for Cancel Reservation Button

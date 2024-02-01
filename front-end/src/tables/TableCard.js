@@ -1,7 +1,7 @@
 import React from "react";
 import { removeReservation } from "../utils/api";
 import { Icon } from "@iconify/react";
-import { useHistory } from "react-router-dom"; // Import useHistory
+
 import "./TableCard.css"
 
 function TableCard({
@@ -12,7 +12,7 @@ function TableCard({
   setTableError,
   loadReservationsAndTables,
 }) {
-  const history = useHistory(); // Initialize useHistory
+ 
 
   const handleFinish = (event) => {
     event.preventDefault();
@@ -25,13 +25,7 @@ function TableCard({
     }
   };
 
-  const handleSeat = (event) => {
-    event.preventDefault();
-    // Navigate to the seat route for the corresponding reservation_id
-    if (reservation_id) {
-      history.push(`/reservations/${reservation_id}/seat`);
-    }
-  };
+
 
   return (
     <>
@@ -65,15 +59,6 @@ function TableCard({
                   data-table-id-finish={table_id}
                 >
                   Finish
-                </button>
-                <button
-                  type="button"
-                  className="btn"
-                  id="seatButton"
-                  onClick={handleSeat}
-                  data-table-id-seat={table_id}
-                >
-                  Seat
                 </button>
               </>
             )}

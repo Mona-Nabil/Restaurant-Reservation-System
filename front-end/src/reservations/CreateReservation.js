@@ -20,8 +20,16 @@ function CreateReservation() {
   const history = useHistory();
 
   const handleChange = ({ target }) => {
-    setReservation({ ...reservation, [target.name]: target.value });
+    // Apply regex only to mobile_number field
+    const cleanedValue =
+      target.name === "mobile_number"
+        ? target.value.replace(/[^0-9-]/g, '')
+        : target.value;
+  
+    setReservation({ ...reservation, [target.name]: cleanedValue });
   };
+  
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,7 +40,6 @@ function CreateReservation() {
         reservation,
         abortController.signal
       );
-  console.log(newReservation, reservation);
       // Redirect to the dashboard for the reservation date
       history.push(`/dashboard?date=${reservation.reservation_date.slice(0, 10)}`);
     } catch (error) {

@@ -81,7 +81,6 @@ function hasValidCapacity(req, res, next) {
 async function create(req, res, next) {
   try {
     const data = await service.create(req.body.data);
-    console.log("Created data:", data);
 
     if (!data) {
       throw new Error("Data not returned from create service");
@@ -89,7 +88,6 @@ async function create(req, res, next) {
 
     res.status(201).json({ data: data });
   } catch (error) {
-    console.error("Error in create handler:", error);
     next(error);
   }
 }

@@ -23,68 +23,48 @@ body {
   text-align: right;
 }
 
-/* Reservation Cards Styles */
-.dashboard .reservations-list {
+/* Reservation List Styles */
+.dashboard .reservations-container {
   background-color: rgba(7, 66, 77, 0.75);
   border: none;
   border-radius: 15px;
   filter: drop-shadow(10px 12px 0.75rem #07434dc4);
   padding: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
-.dashboard .reservations-list h4 {
+.dashboard .reservations-container h4 {
   color: #F8F8F4;
+  margin-bottom: 10px;
 }
 
-.dashboard .reservations-list .card {
+.dashboard .reservations-container .card {
   max-width: 20rem;
-  background-color: #2c3e50; /* A dark color */
-  color: #ecf0f1; /* Light text color */
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  margin-bottom: 10px;
 }
 
-.dashboard .reservations-list .card-header {
+.dashboard .reservations-container .card-header {
   color: #3498db;
 }
 
-/* Button Toolbar Nav Styles */
-.dashboard .btn-toolbar {
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
-/* Table Cards Styles */
-.dashboard .tables-list {
+/* Table List Styles */
+.dashboard .tables-container {
   background-color: rgba(255, 89, 88, 0.75);
   border-radius: 15px;
   filter: drop-shadow(10px 12px 0.75rem #d84949d2);
   padding: 20px;
 }
 
-.dashboard .tables-list h4 {
+.dashboard .tables-container h4 {
   color: #F8F8F4;
+  margin-bottom: 10px;
 }
 
-.dashboard .tables-list .card {
+.dashboard .tables-container .card {
   border: none;
   margin: 5px 3px;
-  background-color: #e74c3c; /* A vivid red color */
-  color: #ecf0f1; /* Light text color */
-}
-
-/* Seat Button Styles */
-.dashboard .tables-list button.btn {
-  margin-top: 10px;
-  background-color: #3498db; /* A cool blue color */
-  color: #ecf0f1; /* Light text color */
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-.dashboard .tables-list button.btn:hover {
-  background-color: #2980b9; /* Darker blue on hover */
+  background-color: #e74c3c;
+  color: #ecf0f1;
 }

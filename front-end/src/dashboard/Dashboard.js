@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 import { listReservations, listTables } from "../utils/api";
 import ReservationsList from "../reservations/ReservationList";
 import TableList from "../tables/TableList";
-import DateNavButtons from "./DateNavButtons";
-import { previous, next, today } from "../utils/date-time";
+import { previous, next } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
 
 function Dashboard({ date }) {
@@ -14,34 +13,62 @@ function Dashboard({ date }) {
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
 
-  useEffect(() => {
-    loadReservationsAndTables();
-  }, [date]);
-
-  function loadReservations() {
+  const loadReservations = useCallback(() => {
     const abortController = new AbortController();
     setReservationsError(null);
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
-  }
+  }, [date]);
 
-  function loadTables() {
+  const loadTables = useCallback(() => {
     const abortController = new AbortController();
     setTablesError(null);
     listTables(abortController.signal)
       .then(setTables)
       .catch(setTablesError);
     return () => abortController.abort();
-  }
+  }, []);
 
-  function loadReservationsAndTables() {
-    const abortController = new AbortController();
+  const loadReservationsAndTables = useCallback(() => {
     loadReservations();
     loadTables();
-    return () => abortController.abort();
-  }
+  }, [loadReservations, loadTables]);
+
+  useEffect(() => {
+    loadReservationsAndTables();
+  }, [date, loadReservationsAndTables]);
+
+
+  // useEffect(() => {
+  //   loadReservationsAndTables();
+  // }, [date]);
+
+  // function loadReservations() {
+  //   const abortController = new AbortController();
+  //   setReservationsError(null);
+  //   listReservations({ date }, abortController.signal)
+  //     .then(setReservations)
+  //     .catch(setReservationsError);
+  //   return () => abortController.abort();
+  // }
+
+  // function loadTables() {
+  //   const abortController = new AbortController();
+  //   setTablesError(null);
+  //   listTables(abortController.signal)
+  //     .then(setTables)
+  //     .catch(setTablesError);
+  //   return () => abortController.abort();
+  // }
+
+  // function loadReservationsAndTables() {
+  //   const abortController = new AbortController();
+  //   loadReservations();
+  //   loadTables();
+  //   return () => abortController.abort();
+  // }
 
   return (
     <main className="dashboard">
@@ -68,6 +95,7 @@ function Dashboard({ date }) {
         <ReservationsList
           reservations={reservations}
           setReservationsError={setReservationsError}
+          reservationsError={reservationsError}
           loadReservationsAndTables={loadReservationsAndTables}
         />
       </div>
