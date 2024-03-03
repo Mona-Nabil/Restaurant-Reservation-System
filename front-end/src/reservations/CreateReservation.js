@@ -13,9 +13,10 @@ function CreateReservation() {
     reservation_time: "",
     people: "",
   };
-
   const [reservation, setReservation] = useState({ ...initialFormState });
-  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  // eslint-disable-next-line no-unused-vars
+  const [formSubmitted, setFormSubmitted] = useState(false); // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const history = useHistory();
 
@@ -23,32 +24,32 @@ function CreateReservation() {
     // Apply regex only to mobile_number field
     const cleanedValue =
       target.name === "mobile_number"
-        ? target.value.replace(/[^0-9-]/g, '')
+        ? target.value.replace(/[^0-9-]/g, "")
         : target.value;
-  
+
     setReservation({ ...reservation, [target.name]: cleanedValue });
   };
-  
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const abortController = new AbortController();
-  
+
     try {
+      //  eslint-disable-next-line
       const newReservation = await createReservation(
         reservation,
         abortController.signal
       );
       // Redirect to the dashboard for the reservation date
-      history.push(`/dashboard?date=${reservation.reservation_date.slice(0, 10)}`);
+      history.push(
+        `/dashboard?date=${reservation.reservation_date.slice(0, 10)}`
+      );
     } catch (error) {
       setError(error);
     } finally {
       abortController.abort();
     }
   };
-  
 
   return (
     <main>
