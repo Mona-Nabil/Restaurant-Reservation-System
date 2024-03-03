@@ -16,7 +16,7 @@ function CreateReservation() {
   const [reservation, setReservation] = useState({ ...initialFormState });
 
   // eslint-disable-next-line no-unused-vars
-  const [formSubmitted, setFormSubmitted] = useState(false); // eslint-disable-next-line no-unused-vars
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [error, setError] = useState(null);
   const history = useHistory();
 
